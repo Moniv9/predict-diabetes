@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 220">
+  <!-- Background -->
+  <rect width="400" height="220" rx="10" fill="#f8f9fa" />
+  
+  <!-- Neural Network -->
+  <g transform="translate(125, 30)">
+    <!-- Layer 1 (Input) -->
+    <circle cx="30" cy="25" r="8" fill="#dbe4ff" stroke="#4263eb" stroke-width="1.5"/>
+    <circle cx="30" cy="60" r="8" fill="#dbe4ff" stroke="#4263eb" stroke-width="1.5"/>
+    <circle cx="30" cy="95" r="8" fill="#dbe4ff" stroke="#4263eb" stroke-width="1.5"/>
+    <circle cx="30" cy="130" r="8" fill="#dbe4ff" stroke="#4263eb" stroke-width="1.5"/>
+    
+    <!-- Layer 2 (Hidden) -->
+    <circle cx="90" cy="40" r="8" fill="#dbe4ff" stroke="#4263eb" stroke-width="1.5"/>
+    <circle cx="90" cy="80" r="8" fill="#dbe4ff" stroke="#4263eb" stroke-width="1.5"/>
+    <circle cx="90" cy="120" r="8" fill="#dbe4ff" stroke="#4263eb" stroke-width="1.5"/>
+    
+    <!-- Layer 3 (Output) -->
+    <circle cx="150" cy="25" r="8" fill="#dbe4ff" stroke="#4263eb" stroke-width="1.5"/>
+    <circle cx="150" cy="60" r="8" fill="#dbe4ff" stroke="#4263eb" stroke-width="1.5"/>
+    <circle cx="150" cy="95" r="8" fill="#dbe4ff" stroke="#4263eb" stroke-width="1.5"/>
+    <circle cx="150" cy="130" r="8" fill="#dbe4ff" stroke="#4263eb" stroke-width="1.5"/>
+    
+    <!-- Connections Layer 1 to 2 -->
+    <line x1="38" y1="25" x2="82" y2="40" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    <line x1="38" y1="25" x2="82" y2="80" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    <line x1="38" y1="25" x2="82" y2="120" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    
+    <line x1="38" y1="60" x2="82" y2="40" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    <line x1="38" y1="60" x2="82" y2="80" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    <line x1="38" y1="60" x2="82" y2="120" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    
+    <line x1="38" y1="95" x2="82" y2="40" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    <line x1="38" y1="95" x2="82" y2="80" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    <line x1="38" y1="95" x2="82" y2="120" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    
+    <line x1="38" y1="130" x2="82" y2="40" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    <line x1="38" y1="130" x2="82" y2="80" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    <line x1="38" y1="130" x2="82" y2="120" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    
+    <!-- Connections Layer 2 to 3 -->
+    <line x1="98" y1="40" x2="142" y2="25" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    <line x1="98" y1="40" x2="142" y2="60" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    <line x1="98" y1="40" x2="142" y2="95" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    <line x1="98" y1="40" x2="142" y2="130" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    
+    <line x1="98" y1="80" x2="142" y2="25" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    <line x1="98" y1="80" x2="142" y2="60" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    <line x1="98" y1="80" x2="142" y2="95" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    <line x1="98" y1="80" x2="142" y2="130" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    
+    <line x1="98" y1="120" x2="142" y2="25" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    <line x1="98" y1="120" x2="142" y2="60" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    <line x1="98" y1="120" x2="142" y2="95" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+    <line x1="98" y1="120" x2="142" y2="130" stroke="#4263eb" stroke-width="1" opacity="0.6"/>
+  </g>
+  
+  <!-- Document with Data Points -->
+  <g transform="translate(50, 55)">
+    <rect x="0" y="0" width="70" height="90" rx="3" fill="white" stroke="#228be6" stroke-width="1.5"/>
+    
+    <!-- Document content -->
+    <line x1="10" y1="15" x2="60" y2="15" stroke="#228be6" stroke-width="1.5"/>
+    <line x1="10" y1="25" x2="60" y2="25" stroke="#228be6" stroke-width="1.5"/>
+    <line x1="10" y1="35" x2="40" y2="35" stroke="#228be6" stroke-width="1.5"/>
+    
+    <line x1="10" y1="50" x2="60" y2="50" stroke="#228be6" stroke-width="1.5"/>
+    <line x1="10" y1="60" x2="60" y2="60" stroke="#228be6" stroke-width="1.5"/>
+    <line x1="10" y1="70" x2="40" y2="70" stroke="#228be6" stroke-width="1.5"/>
+    
+    <!-- Highlight points -->
+    <circle cx="15" cy="15" r="4" fill="#fa5252" opacity="0.7"/>
+    <circle cx="35" cy="25" r="4" fill="#fa5252" opacity="0.7"/>
+    <circle cx="25" cy="50" r="4" fill="#fa5252" opacity="0.7"/>
+    <circle cx="50" cy="60" r="4" fill="#fa5252" opacity="0.7"/>
+  </g>
+  
+  <!-- Extracted Data -->
+  <g transform="translate(280, 55)">
+    <rect x="0" y="0" width="70" height="90" rx="3" fill="#e7f5ff" stroke="#1971c2" stroke-width="1.5"/>
+    
+    <!-- JSON data -->
+    <text x="10" y="15" font-family="Courier" font-size="6" fill="#1971c2">{</text>
+    <text x="15" y="25" font-family="Courier" font-size="6" fill="#1971c2">"date": "2025-02-24",</text>
+    <text x="15" y="35" font-family="Courier" font-size="6" fill="#1971c2">"vendor": "ABC Corp",</text>
+    <text x="15" y="45" font-family="Courier" font-size="6" fill="#1971c2">"amount": "$1,250.00",</text>
+    <text x="15" y="55" font-family="Courier" font-size="6" fill="#1971c2">"invoice_num": "INV-2025",</text>
+    <text x="15" y="65" font-family="Courier" font-size="6" fill="#1971c2">"items": [</text>
+    <text x="20" y="75" font-family="Courier" font-size="6" fill="#1971c2">{"desc": "Service A", ...},</text>
+    <text x="15" y="85" font-family="Courier" font-size="6" fill="#1971c2">]</text>
+    <text x="10" y="95" font-family="Courier" font-size="6" fill="#1971c2">}</text>
+  </g>
+  
+  <!-- Connecting Arrow -->
+  <g transform="translate(200, 100)">
+    <path d="M-70,0 L70,0" stroke="#4263eb" stroke-width="2" stroke-dasharray="5,3"/>
+    <polygon points="70,0 63,-5 63,5" fill="#4263eb"/>
+  </g>
+  
+  <!-- Title -->
+  <text x="200" y="200" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#1a1a1a">AI Processing & Data Extraction</text>
+</svg>
