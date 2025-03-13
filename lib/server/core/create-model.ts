@@ -1,79 +1,58 @@
 import * as tf from "@tensorflow/tfjs";
 
-export function createModel() {
+/**
+ * Creates a sequential neural network model for predicting HbA1c values.
+ * The model architecture is designed for regression on patient health data.
+ *
+ * @returns {tf.Sequential} A compiled TensorFlow.js sequential model
+ */
+export function createModel(): tf.Sequential {
+  // Create a sequential model
   const model = tf.sequential();
 
-  // Input Layer (12 features)
+  // Add layers to the model
+  // Input layer with 11 features (age, gender, height, weight, bmi, high_bp, low_bp, rbs, fbs, waist, hip)
   model.add(
     tf.layers.dense({
-      inputShape: [12],
-      units: 128,
-      kernelRegularizer: tf.regularizers.l2({ l2: 0.001 }), // FIXED
-    })
-  );
-  model.add(tf.layers.batchNormalization());
-  model.add(tf.layers.activation({ activation: "swish" }));
-  model.add(tf.layers.dropout({ rate: 0.5 }));
-
-  // Residual Block 1
-  model.add(
-    tf.layers.dense({
+      inputShape: [11],
       units: 64,
-      kernelRegularizer: tf.regularizers.l2({ l2: 0.001 }), // FIXED
+      activation: "relu",
+      kernelInitializer: "heNormal",
     })
   );
-  model.add(tf.layers.batchNormalization());
-  model.add(tf.layers.activation({ activation: "swish" }));
-  model.add(tf.layers.dropout({ rate: 0.4 }));
 
-  // Residual Block 2
+  // Add dropout to prevent overfitting
+  model.add(tf.layers.dropout({ rate: 0.2 }));
+
+  // Hidden layer
   model.add(
     tf.layers.dense({
       units: 32,
-      kernelRegularizer: tf.regularizers.l2({ l2: 0.001 }), // FIXED
+      activation: "relu",
+      kernelInitializer: "heNormal",
     })
   );
-  model.add(tf.layers.batchNormalization());
-  model.add(tf.layers.activation({ activation: "swish" }));
-  model.add(tf.layers.dropout({ rate: 0.3 }));
 
-  // Residual Block 3
-  model.add(
-    tf.layers.dense({
-      units: 16,
-      kernelRegularizer: tf.regularizers.l2({ l2: 0.001 }), // FIXED
-    })
-  );
-  model.add(tf.layers.batchNormalization());
-  model.add(tf.layers.activation({ activation: "swish" }));
+  // Add dropout to prevent overfitting
   model.add(tf.layers.dropout({ rate: 0.2 }));
 
-  // Residual Block 4
+  // Output layer (single unit for HbA1c prediction)
   model.add(
     tf.layers.dense({
-      units: 8,
-      kernelRegularizer: tf.regularizers.l2({ l2: 0.001 }), // FIXED
-    })
-  );
-  model.add(tf.layers.batchNormalization());
-  model.add(tf.layers.activation({ activation: "swish" }));
-
-  // Output Layer (3 classes: Non-Diabetic, Pre-Diabetic, Diabetic)
-  model.add(
-    tf.layers.dense({
-      units: 3,
-      activation: "softmax",
-      kernelInitializer: "glorotUniform",
+      units: 1,
+      activation: "linear", // Linear activation for regression
     })
   );
 
-  // Compile the model with AMSGrad (better for small datasets)
+  // Compile the model with mean squared error loss and Adam optimizer
   model.compile({
-    // @ts-ignore
-    optimizer: tf.train.adam(0.0002, 0.9, 0.999, 1e-8, true), // AMSGrad=True
-    loss: "sparseCategoricalCrossentropy",
-    metrics: ["accuracy"],
+    optimizer: tf.train.adam(0.001),
+    loss: "meanSquaredError",
+    metrics: ["mse"],
   });
+
+  console.log("Model created and compiled");
+  model.summary();
 
   return model;
 }

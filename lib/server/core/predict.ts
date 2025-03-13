@@ -1,25 +1,89 @@
 import * as tf from "@tensorflow/tfjs";
 
-export async function predictPatient(newPatient: any, trainedModel: any) {
-  //const model = await tf.loadLayersModel("./model.json");
-
+export async function predictPatient(
+  newPatient: any,
+  trainedModel: any,
+  stats?: any
+) {
   // Convert patient data to tensor
   const inputTensor = tf.tensor2d([newPatient]);
 
+  // Normalize input if stats are provided
+  let normalizedInput = inputTensor;
+  if (stats) {
+    normalizedInput = inputTensor.sub(stats.mean).div(stats.std.add(1e-8));
+  }
+
   // Predict
-  const prediction = trainedModel.predict(inputTensor);
-  const probabilities = prediction.dataSync();
-  const result = prediction.argMax(1).dataSync()[0];
+  const prediction = trainedModel.predict(normalizedInput);
+  const hba1cValue = prediction.dataSync()[0];
 
-  const labels = ["Non-Diabetic", "Pre-Diabetic", "Diabetic"];
+  // Clean up tensors
+  inputTensor.dispose();
+  normalizedInput.dispose();
+  prediction.dispose();
 
-  const output: any[] = [];
+  // Categorize HbA1c value according to standard medical guidelines
+  let diabeticStatus = "Non-Diabetic";
+  let risk = "Low";
 
-  // Display prediction percentages for each class
-  labels.forEach((label, index) => {
-    const percentage = (probabilities[index] * 100).toFixed(2);
-    output.push({ label, percentage });
-  });
+  if (hba1cValue < 5.7) {
+    diabeticStatus = "Non-Diabetic";
+    risk = "Low";
+  } else if (hba1cValue >= 5.7 && hba1cValue < 6.5) {
+    diabeticStatus = "Pre-Diabetic";
+    risk = "Moderate";
+  } else {
+    diabeticStatus = "Diabetic";
+    risk = "High";
+  }
 
-  return { output };
+  // Generate an interpretable output
+  return {
+    predictedHbA1c: parseFloat(hba1cValue.toFixed(2)),
+    diabeticStatus,
+    risk,
+    interpretation: {
+      status: diabeticStatus,
+      description: getDescription(diabeticStatus),
+      distanceToNextThreshold: getDistanceToThreshold(
+        hba1cValue,
+        diabeticStatus
+      ),
+    },
+  };
+}
+
+// Helper function to get description based on status
+function getDescription(status: string): string {
+  switch (status) {
+    case "Non-Diabetic":
+      return "Your predicted HbA1c is within the normal range. Continue maintaining healthy lifestyle habits.";
+    case "Pre-Diabetic":
+      return "Your predicted HbA1c falls in the pre-diabetic range. Consider lifestyle modifications and consult with a healthcare provider.";
+    case "Diabetic":
+      return "Your predicted HbA1c is in the diabetic range. Please consult with a healthcare provider for proper management.";
+    default:
+      return "Unable to provide a description for your HbA1c value.";
+  }
+}
+
+// Helper function to calculate distance to next threshold
+function getDistanceToThreshold(hba1cValue: number, status: string): string {
+  switch (status) {
+    case "Non-Diabetic":
+      return `${(5.7 - hba1cValue).toFixed(
+        2
+      )} units below pre-diabetic threshold (5.7)`;
+    case "Pre-Diabetic":
+      return `${(6.5 - hba1cValue).toFixed(
+        2
+      )} units below diabetic threshold (6.5)`;
+    case "Diabetic":
+      return `${(hba1cValue - 6.5).toFixed(
+        2
+      )} units above diabetic threshold (6.5)`;
+    default:
+      return "";
+  }
 }

@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FileUp, Upload } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -18,6 +17,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ErrorBoundary } from "../common/error-boundary";
+import HbA1cResultCard from "./details";
 
 const formSchema = z.object({
   age: z.string().min(1, { message: "Age is required" }),
@@ -31,7 +32,6 @@ const formSchema = z.object({
   fbs: z.string().min(1, { message: "Fasting blood sugar is required" }),
   waist: z.string().min(1, { message: "Waist measurement is required" }),
   hip: z.string().min(1, { message: "Hip measurement is required" }),
-  hba1c: z.string().min(1, { message: "HbA1c is required" }),
 });
 
 type PredictionOutput = {
@@ -48,7 +48,6 @@ export function PatientForm({
 }: {
   onDataChange: (data: string[][]) => void;
 }) {
-  const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
@@ -68,7 +67,6 @@ export function PatientForm({
       fbs: "",
       waist: "",
       hip: "",
-      hba1c: "",
     },
   });
 
@@ -104,7 +102,6 @@ export function PatientForm({
         values.fbs,
         values.waist,
         values.hip,
-        values.hba1c,
       ].join(",");
 
       formData.append("patientData", patientData);
@@ -188,7 +185,9 @@ export function PatientForm({
                   name="gender"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Gender (0-Female, 1-Male)</FormLabel>
+                      <FormLabel className="whitespace-nowrap">
+                        Gender (0-Female, 1-Male)
+                      </FormLabel>
                       <FormControl>
                         <Input
                           type="number"
@@ -324,24 +323,6 @@ export function PatientForm({
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="hba1c"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>HbA1c</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          step="0.1"
-                          placeholder="HbA1c"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
               </div>
               <Button type="submit" disabled={isLoading}>
                 {isLoading ? (
@@ -364,72 +345,9 @@ export function PatientForm({
             <CardTitle>Prediction Results</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col items-center">
-              <div className="w-64 h-64 relative">
-                <svg viewBox="0 0 100 100" className="w-full h-full">
-                  {prediction.output.map((item, index) => {
-                    // Calculate the starting position for each segment
-                    const previousSegments = prediction.output
-                      .slice(0, index)
-                      .reduce(
-                        (acc, curr) => acc + parseFloat(curr.percentage),
-                        0
-                      );
-
-                    const startAngle = (previousSegments / 100) * 360;
-                    const angle = (parseFloat(item.percentage) / 100) * 360;
-                    const endAngle = startAngle + angle;
-
-                    // Convert angles to radians for calculations
-                    const startRad = (startAngle - 90) * (Math.PI / 180);
-                    const endRad = (endAngle - 90) * (Math.PI / 180);
-
-                    // Calculate the coordinates
-                    const x1 = 50 + 40 * Math.cos(startRad);
-                    const y1 = 50 + 40 * Math.sin(startRad);
-                    const x2 = 50 + 40 * Math.cos(endRad);
-                    const y2 = 50 + 40 * Math.sin(endRad);
-
-                    // Determine if the arc should be drawn as a large arc
-                    const largeArcFlag = angle > 180 ? 1 : 0;
-
-                    // Colors for different segments
-                    const colors = ["#4CAF50", "#FFC107", "#F44336"];
-
-                    return (
-                      <path
-                        key={index}
-                        d={`M 50 50 L ${x1} ${y1} A 40 40 0 ${largeArcFlag} 1 ${x2} ${y2} Z`}
-                        fill={colors[index % colors.length]}
-                      />
-                    );
-                  })}
-                </svg>
-              </div>
-
-              <div className="mt-6 grid grid-cols-1 gap-2 w-full">
-                {prediction.output.map((item, index) => {
-                  const colors = ["#4CAF50", "#FFC107", "#F44336"];
-                  return (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between"
-                    >
-                      <div className="flex items-center">
-                        <div
-                          className="w-4 h-4 mr-2 rounded-sm"
-                          style={{
-                            backgroundColor: colors[index % colors.length],
-                          }}
-                        ></div>
-                        <span>{item.label}</span>
-                      </div>
-                      <span className="font-bold">{item.percentage}%</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+            <ErrorBoundary>
+              <HbA1cResultCard prediction={prediction} />
+            </ErrorBoundary>
           </CardContent>
         </Card>
       )}

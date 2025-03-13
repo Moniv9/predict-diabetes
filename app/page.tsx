@@ -1,5 +1,6 @@
 "use client";
 
+import { ErrorBoundary } from "@/components/common/error-boundary";
 import { GridView } from "@/components/core/grid-view";
 import { PatientForm } from "@/components/form";
 import { useState } from "react";
@@ -21,7 +22,6 @@ export default function Home() {
       row.waist || "",
       row.hip || "",
       row.hba1c || "",
-      row.label || "",
     ]);
     setCsvData(transformedData);
   };
@@ -30,10 +30,14 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       <div className="flex">
         <div className="w-[60%]">
-          <GridView initialRows={10} initialCols={10} data={csvData} />
+          <ErrorBoundary>
+            <GridView initialRows={1} initialCols={8} data={csvData} />
+          </ErrorBoundary>
         </div>
         <div className="w-[40%]">
-          <PatientForm onDataChange={handleDataChange} />
+          <ErrorBoundary>
+            <PatientForm onDataChange={handleDataChange} />
+          </ErrorBoundary>
         </div>
       </div>
     </div>

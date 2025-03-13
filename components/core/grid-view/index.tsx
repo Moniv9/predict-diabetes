@@ -57,7 +57,6 @@ export function GridView({ initialRows, initialCols, data }: GridViewProps) {
             "Waist",
             "Hip",
             "HbA1c",
-            "Label",
           ];
           return headers[index] || `Column ${index + 1}`;
         },
