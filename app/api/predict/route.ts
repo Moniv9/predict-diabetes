@@ -5,6 +5,8 @@ import { prepareData } from "@/lib/server/core/prepare";
 import { trainModel } from "@/lib/server/core/train-model";
 import { NextRequest, NextResponse } from "next/server";
 
+let model: any;
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -19,11 +21,13 @@ export async function POST(request: NextRequest) {
     }
 
     const csvData = await parseCSV(file);
-
     const trainingData = await prepareData(csvData);
-    const model = createModel();
-    // @ts-ignore
-    await trainModel({ trainingData, model });
+
+    if (!model) {
+      model = createModel();
+      // @ts-ignore
+      await trainModel({ trainingData, model });
+    }
 
     const inputData = patientData.split(",").map(Number);
     const prediction = await predictPatient(

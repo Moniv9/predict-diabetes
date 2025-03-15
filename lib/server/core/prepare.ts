@@ -16,7 +16,6 @@ export async function prepareData(rawData: any[]) {
       row.fbs,
       row.waist,
       row.hip,
-      row.hba1c,
     ];
     return values.every(
       (val) => val !== undefined && val !== null && !isNaN(val)

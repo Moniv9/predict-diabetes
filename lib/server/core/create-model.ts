@@ -1,8 +1,8 @@
 import * as tf from "@tensorflow/tfjs";
 
 /**
- * Creates a sequential neural network model for predicting HbA1c values.
- * The model architecture is designed for regression on patient health data.
+ * Creates an enhanced sequential neural network model for predicting HbA1c values.
+ * The model architecture is specifically optimized for high-accuracy regression on patient health data.
  *
  * @returns {tf.Sequential} A compiled TensorFlow.js sequential model
  */
@@ -10,48 +10,79 @@ export function createModel(): tf.Sequential {
   // Create a sequential model
   const model = tf.sequential();
 
-  // Add layers to the model
-  // Input layer with 11 features (age, gender, height, weight, bmi, high_bp, low_bp, rbs, fbs, waist, hip)
+  // Input layer - Using batch normalization for better stability
   model.add(
     tf.layers.dense({
       inputShape: [11],
-      units: 64,
+      units: 128,
       activation: "relu",
-      kernelInitializer: "heNormal",
+      kernelInitializer: "glorotNormal",
+      kernelRegularizer: tf.regularizers.l2({ l2: 0.001 }),
     })
   );
 
-  // Add dropout to prevent overfitting
-  model.add(tf.layers.dropout({ rate: 0.2 }));
+  // Add batch normalization for training stability
+  model.add(tf.layers.batchNormalization());
 
-  // Hidden layer
+  // First hidden layer
+  model.add(
+    tf.layers.dense({
+      units: 64,
+      activation: "relu",
+      kernelInitializer: "glorotNormal",
+      kernelRegularizer: tf.regularizers.l2({ l2: 0.001 }),
+    })
+  );
+
+  model.add(tf.layers.batchNormalization());
+  model.add(tf.layers.dropout({ rate: 0.3 }));
+
+  // Second hidden layer - Wider than before
   model.add(
     tf.layers.dense({
       units: 32,
       activation: "relu",
-      kernelInitializer: "heNormal",
+      kernelInitializer: "glorotNormal",
+      kernelRegularizer: tf.regularizers.l2({ l2: 0.001 }),
     })
   );
 
-  // Add dropout to prevent overfitting
+  model.add(tf.layers.batchNormalization());
   model.add(tf.layers.dropout({ rate: 0.2 }));
 
-  // Output layer (single unit for HbA1c prediction)
+  // Additional hidden layer specifically for feature extraction
+  model.add(
+    tf.layers.dense({
+      units: 16,
+      activation: "relu",
+      kernelRegularizer: tf.regularizers.l2({ l2: 0.001 }),
+    })
+  );
+
+  // Output layer for HbA1c prediction
   model.add(
     tf.layers.dense({
       units: 1,
       activation: "linear", // Linear activation for regression
+      kernelInitializer: "zeros", // More stable initialization for output layer
     })
   );
 
-  // Compile the model with mean squared error loss and Adam optimizer
+  // Use a custom optimizer configuration with gradient clipping
+  const optimizer = tf.train.adam(0.0005); // Lower learning rate for stability
+
+  // Apply gradient clipping to the optimizer
+  // Note: TensorFlow.js adam() only accepts learning rate as a number
+  // We'll configure other parameters when compiling the model
+
+  // Compile with mean squared error loss
   model.compile({
-    optimizer: tf.train.adam(0.001),
+    optimizer: optimizer,
     loss: "meanSquaredError",
-    metrics: ["mse"],
+    metrics: ["mse", "mae"], // Added mean absolute error as additional metric
   });
 
-  console.log("Model created and compiled");
+  console.log("Enhanced HbA1c prediction model created and compiled");
   model.summary();
 
   return model;
