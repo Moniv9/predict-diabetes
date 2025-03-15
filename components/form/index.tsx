@@ -8,6 +8,7 @@ import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -32,6 +33,7 @@ const formSchema = z.object({
   fbs: z.string().min(1, { message: "Fasting blood sugar is required" }),
   waist: z.string().min(1, { message: "Waist measurement is required" }),
   hip: z.string().min(1, { message: "Hip measurement is required" }),
+  resetTraining: z.boolean().default(false),
 });
 
 type PredictionOutput = {
@@ -67,6 +69,7 @@ export function PatientForm({
       fbs: "",
       waist: "",
       hip: "",
+      resetTraining: false,
     },
   });
 
@@ -105,6 +108,7 @@ export function PatientForm({
       ].join(",");
 
       formData.append("patientData", patientData);
+      formData.append("resetTraining", values.resetTraining.toString());
 
       const response = await fetch("/api/predict", {
         method: "POST",
@@ -119,6 +123,9 @@ export function PatientForm({
         console.log("Prediction result:", result.prediction);
         setPrediction(result.prediction);
       }
+
+      // Toggle reset checkbox back to false after submission
+      form.setValue("resetTraining", false);
     } catch (error) {
       console.error("Error submitting form:", error);
     } finally {
@@ -324,6 +331,25 @@ export function PatientForm({
                   )}
                 />
               </div>
+
+              <FormField
+                control={form.control}
+                name="resetTraining"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel>Use new training data on server</FormLabel>
+                    </div>
+                  </FormItem>
+                )}
+              />
+
               <Button type="submit" disabled={isLoading}>
                 {isLoading ? (
                   <>

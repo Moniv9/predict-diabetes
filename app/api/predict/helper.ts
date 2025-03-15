@@ -3,17 +3,17 @@ import { trainModel } from "@/lib/server/core/train-model";
 
 class ModelSingleton {
   private static instance: any;
-  private static lastTrainingData: any;
 
   private constructor() {}
 
-  public static async getInstance(trainingData: any) {
+  public static async getInstance(trainingData: any, resetTraining: boolean) {
     if (!ModelSingleton.instance) {
       ModelSingleton.instance = createModel();
-      ModelSingleton.lastTrainingData = trainingData;
-    }
 
-    await trainModel({ trainingData, model: ModelSingleton.instance });
+      if (resetTraining) {
+        await trainModel({ trainingData, model: ModelSingleton.instance });
+      }
+    }
 
     return ModelSingleton.instance;
   }
