@@ -6,7 +6,13 @@ class ModelSingleton {
 
   private constructor() {}
 
-  public static async getInstance(trainingData: any, resetTraining: boolean) {
+  public static async getInstance({
+    trainingData,
+    resetTraining,
+  }: {
+    trainingData: any;
+    resetTraining: boolean;
+  }) {
     if (!ModelSingleton.instance) {
       ModelSingleton.instance = createModel();
 

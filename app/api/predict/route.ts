@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const file = formData.get("file") as File;
     const patientData = formData.get("patientData") as string;
+    const resetTraining = formData.get("resetTraining") === "true";
 
     if (!file || !patientData) {
       return NextResponse.json(
@@ -24,7 +25,7 @@ export async function POST(request: NextRequest) {
     const csvData = await parseCSV(file);
     const trainingData = await prepareData(csvData);
 
-    const model = await getModel(trainingData);
+    const model = await getModel({ trainingData, resetTraining });
 
     const inputData = patientData.split(",").map(Number);
     const prediction = await predictPatient(
