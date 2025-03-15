@@ -20,8 +20,8 @@ interface TrainingParams {
 export async function trainModel({
   trainingData,
   model,
-  epochs = 500,
-  batchSize = 32,
+  epochs = 200,
+  batchSize = 16,
   validationSplit = 0.2,
   earlyStoppingPatience = 10,
   learningRate = 0.001,

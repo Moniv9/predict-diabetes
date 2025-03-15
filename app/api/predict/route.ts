@@ -4,6 +4,10 @@ import { prepareData } from "@/lib/server/core/prepare";
 import { NextRequest, NextResponse } from "next/server";
 import { getModel } from "./helper";
 
+export const config = {
+  maxDuration: 120,
+};
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
