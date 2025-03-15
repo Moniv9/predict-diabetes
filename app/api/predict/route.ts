@@ -1,11 +1,8 @@
-import { createModel } from "@/lib/server/core/create-model";
 import { parseCSV } from "@/lib/server/core/parser";
 import { predictPatient } from "@/lib/server/core/predict";
 import { prepareData } from "@/lib/server/core/prepare";
-import { trainModel } from "@/lib/server/core/train-model";
 import { NextRequest, NextResponse } from "next/server";
-
-let model: any;
+import { getModel } from "./helper";
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,11 +20,7 @@ export async function POST(request: NextRequest) {
     const csvData = await parseCSV(file);
     const trainingData = await prepareData(csvData);
 
-    if (!model) {
-      model = createModel();
-      // @ts-ignore
-      await trainModel({ trainingData, model });
-    }
+    const model = await getModel(trainingData);
 
     const inputData = patientData.split(",").map(Number);
     const prediction = await predictPatient(
