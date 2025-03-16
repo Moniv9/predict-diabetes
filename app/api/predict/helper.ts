@@ -15,10 +15,10 @@ class ModelSingleton {
   }) {
     if (!ModelSingleton.instance) {
       ModelSingleton.instance = createModel();
+    }
 
-      if (resetTraining) {
-        await trainModel({ trainingData, model: ModelSingleton.instance });
-      }
+    if (resetTraining) {
+      await trainModel({ trainingData, model: ModelSingleton.instance });
     }
 
     return ModelSingleton.instance;
