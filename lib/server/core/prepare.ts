@@ -10,8 +10,8 @@ export async function prepareData(rawData: any[]) {
       row.height,
       row.weight,
       row.bmi,
-      row.high_bp,
-      row.low_bp,
+      row.systolic_bp,
+      row.diastolic_bp,
       row.rbs,
       row.fbs,
       row.waist,
@@ -35,8 +35,8 @@ export async function prepareData(rawData: any[]) {
     parseFloat(row.height),
     parseFloat(row.weight),
     parseFloat(row.bmi),
-    parseFloat(row.high_bp),
-    parseFloat(row.low_bp),
+    parseFloat(row.systolic_bp),
+    parseFloat(row.diastolic_bp),
     parseFloat(row.rbs), // random blood sugar
     parseFloat(row.fbs), // fasting blood sugar
     parseFloat(row.waist),

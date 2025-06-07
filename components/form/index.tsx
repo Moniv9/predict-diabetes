@@ -27,8 +27,8 @@ const formSchema = z.object({
   height: z.string().min(1, { message: "Height is required" }),
   weight: z.string().min(1, { message: "Weight is required" }),
   bmi: z.string().min(1, { message: "BMI is required" }),
-  high_bp: z.string().min(1, { message: "High BP is required" }),
-  low_bp: z.string().min(1, { message: "Low BP is required" }),
+  systolic_bp: z.string().min(1, { message: "Systolic BP is required" }),
+  diastolic_bp: z.string().min(1, { message: "Diastolic BP is required" }),
   rbs: z.string().min(1, { message: "Random blood sugar is required" }),
   fbs: z.string().min(1, { message: "Fasting blood sugar is required" }),
   waist: z.string().min(1, { message: "Waist measurement is required" }),
@@ -63,8 +63,8 @@ export function PatientForm({
       height: "",
       weight: "",
       bmi: "",
-      high_bp: "",
-      low_bp: "",
+      systolic_bp: "",
+      diastolic_bp: "",
       rbs: "",
       fbs: "",
       waist: "",
@@ -99,8 +99,8 @@ export function PatientForm({
         values.height,
         values.weight,
         values.bmi,
-        values.high_bp,
-        values.low_bp,
+        values.systolic_bp,
+        values.diastolic_bp,
         values.rbs,
         values.fbs,
         values.waist,
@@ -254,12 +254,16 @@ export function PatientForm({
                 />
                 <FormField
                   control={form.control}
-                  name="high_bp"
+                  name="systolic_bp"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>High BP (mmHg)</FormLabel>
+                      <FormLabel>Systolic BP (mmHg)</FormLabel>
                       <FormControl>
-                        <Input type="number" placeholder="High BP" {...field} />
+                        <Input
+                          type="number"
+                          placeholder="Systolic BP"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -267,12 +271,16 @@ export function PatientForm({
                 />
                 <FormField
                   control={form.control}
-                  name="low_bp"
+                  name="diastolic_bp"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Low BP (mmHg)</FormLabel>
+                      <FormLabel>Diastolic BP (mmHg)</FormLabel>
                       <FormControl>
-                        <Input type="number" placeholder="Low BP" {...field} />
+                        <Input
+                          type="number"
+                          placeholder="Diastolic BP"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
